@@ -18,7 +18,7 @@ def processCase(s, t):
 
   fanswer = open(t, "r")
   perm = [int(x) for x in fanswer.readline().split()]
-  
+
   # check it's valid
   v = [0] * N
   prev = 'X'
@@ -28,7 +28,8 @@ def processCase(s, t):
       return "Your answer must be a permutation of {1,...,N}."
     v[perm[i]-1] = 1
 
-    cur = c[i]
+    cur = c[perm[i]-1]
+
     if cur == prev:
       count += 1
     else:
