@@ -1,26 +1,30 @@
 import path
 import itertools
 import random
+
+DEBUG = 0
+
 def approximate_tsp(n, m, c):
 	max_edge = 0
 	for i in m:
 		row_max = max(i)
 		if row_max > max_edge:
 			max_edge = row_max
-	
+
 
 	metric_m = []
 	for row in m:
 		new_row = [max_edge + i for i in row]
 		metric_m.append(new_row)
-	
+
 	p, cost = path.find_path(0, metric_m, c)
 	p = check_start_paths(n, metric_m, c)
-	p = k_search(4, n, metric_m, c, p, 100)
+	p = k_search(5, n, metric_m, c, p, 100)
 	cost, x = check_cost(p, m, c)
-	print p, cost
-	return p
-	
+        if DEBUG:
+                print p, cost
+	return p, cost
+
 def check_start_paths(n, m, c):
 	best_p, best_cost = path.find_path(0, m, c)
 	for i in range(1,len(m)):
@@ -28,22 +32,24 @@ def check_start_paths(n, m, c):
 		if cost < best_cost:
 			best_cost = cost
 			best_p = p
-	print best_p, best_cost
+        if DEBUG:
+                print best_p, best_cost
 	return best_p
 
-	
-def k_search(k, n, m, colors, path, num_times=10): 
+
+def k_search(k, n, m, colors, path, num_times=10):
 	total = num_times # for printing out, not necessary
-	best_cost, x = check_cost(path, m, colors) 
-	print "cost", best_cost
-	best_path = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] #path
-	
+	best_cost, x = check_cost(path, m, colors)
+        if DEBUG:
+                print "cost", best_cost
+	best_path = list(range(1, len(colors)+1))
+
 	possible_values = []
 	for i in range(k):
 		lst = [j for j in range(n-i+1)]
 		possible_values.append(lst)
 	all_placements = list(itertools.product(*possible_values))
-	
+
 	while num_times > 0:
 		nums = [random.randint(1, len(m))]
 		while len(nums) < k:
@@ -57,13 +63,14 @@ def k_search(k, n, m, colors, path, num_times=10):
 				new_p.insert(placement[i], nums[i])
 			cost, valid = check_cost(new_p, m, colors)
 			if cost < best_cost and valid:
-				print "new path", new_p, cost, "iteration", total - num_times
+                                if DEBUG:
+                                        print "new path", new_p, cost, "iteration", total - num_times
 				best_cost = cost
 				best_path = new_p[:]
 		num_times -= 1
 	return best_path
-	
-	
+
+
 
 def check_cost(perm, d, c):
 	N = len(d)
@@ -71,7 +78,7 @@ def check_cost(perm, d, c):
 	prev = 'X'
 	count = 0
 	for i in range(len(perm)):
-		if v[perm[i]-1] == 1: 
+		if v[perm[i]-1] == 1:
 			return -1, False
 		v[perm[i]-1] = 1
 		cur = c[perm[i]-1]
@@ -90,4 +97,3 @@ def check_cost(perm, d, c):
 
 		cost += d[cur][next]
 	return cost, True
-	

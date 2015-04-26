@@ -1,16 +1,17 @@
+import sys
 import tsp_approximate
+
 T = 1 # number of test cases
-fout = open ("answer.out", "w")
+
 for t in xrange(1, T+1):
-    fin = open(str(t) + ".in", "r")
-    N = int(fin.readline())
+    N = int(sys.stdin.readline())
     d = [[] for i in range(N)]
     for i in xrange(N):
-        d[i] = [int(x) for x in fin.readline().split()]
-    c = fin.readline()
+        d[i] = [int(x) for x in sys.stdin.readline().split()]
+    c = sys.stdin.readline().strip()
 
     # find an answer, and put into assign
-    assign = tsp_approximate.approximate_tsp(N, d, c)
+    assign, cost = tsp_approximate.approximate_tsp(N, d, c)
 
-    fout.write("%s\n" % " ".join(map(str, assign)))
-fout.close()
+    #sys.stdout.write("%s\n" % " ".join(map(str, assign)))
+    print(cost)

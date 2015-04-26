@@ -2,9 +2,9 @@ from __future__ import print_function
 import sys
 import random
 
-SMALLEST = 4
-LARGEST = 15
-N = 100
+SMALLEST = 6
+LARGEST = 6
+N = 10
 MAX_VALUE = 100
 MIN_VALUE = 0
 
@@ -28,12 +28,9 @@ def generate_case(n_cities, index, output_dir_str):
             adj_mat[j][i] = v
 
     # Create color string
-    colors = ""
-    for i in range(n_cities):
-        c = 'R'
-        if random.randint(0, 1) == 0:
-            c = 'B'
-        colors += c
+    colors = ["R"]*(n_cities/2) + ["B"]*(n_cities/2)
+    random.shuffle(colors)
+    colors = "".join(colors)
 
     # Write adj matrix to file
     print(n_cities, file=f)

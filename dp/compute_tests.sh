@@ -9,3 +9,13 @@ do
     #echo $OFILE$i
     i=$((i + 1))
 done
+
+echo "[Approximate Answer] [DP answer]"
+i=0
+for f in $FILES
+do
+    echo "Testing file: $f"
+    python ../test.py < $f > $OOFILE$i
+    diff $OOFILE$i $OFILE$i
+    i=$((i+1))
+done

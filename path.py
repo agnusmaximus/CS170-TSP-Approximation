@@ -28,12 +28,12 @@ def find_path(i, m, colors):
 		path_order.append(next+1)
 		path_cost += m[i][next]
 		visited.add(next)
-		
+
 		if colors[next] == 'R':
 			red += 1
 		else:
 			blue += 1
-		
+
 		if colors[i] == colors[next]:
 			same_color += 1
 		else:
