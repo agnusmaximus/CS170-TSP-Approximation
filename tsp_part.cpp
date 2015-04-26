@@ -9,7 +9,7 @@ using namespace std;
 #define SSTR( x ) dynamic_cast< std::ostringstream & >( \
         ( std::ostringstream() << std::dec << x ) ).str()
 
-#define DEBUG 0
+#define DEBUG 1
 #define CHECK 1
 #define MAX_CITIES 15
 #define MAX_POWER (1<<MAX_CITIES)
@@ -103,17 +103,17 @@ solution path(int start) {
     }
 
     //Initialize sets with 2 nodes
-    if (MAX_CITIES >= 2) {
-	for (int j = 0; j < MAX_CITIES; j++) {
+    if (n_nodes >= 2) {
+	for (int j = 0; j < n_nodes; j++) {
 	    C[0|city_bit_index(start)|city_bit_index(j)][j][colors[start]][NONE][NONE] = dist[start][j];
 	    P[0|city_bit_index(start)|city_bit_index(j)][j][colors[start]][NONE][NONE] = (recon){start, NONE, NONE, NONE};
 	}
     }
 
     //Initialize sets with 3 nodes
-    if (MAX_CITIES >= 3) {
-	for (int j = 0; j < MAX_CITIES; j++) {
-	    for (int k = 0; k < MAX_CITIES; k++) {
+    if (n_nodes >= 3) {
+	for (int j = 0; j < n_nodes; j++) {
+	    for (int k = 0; k < n_nodes; k++) {
 		if (start != j && start != k && j != k) {
 		    int best_dist = C[0|city_bit_index(start)|city_bit_index(j)][j][colors[start]][NONE][NONE] + dist[j][k];
 		    C[0|city_bit_index(start)|city_bit_index(j)|city_bit_index(k)][k][colors[j]][colors[start]][NONE] = best_dist;
@@ -124,10 +124,10 @@ solution path(int start) {
     }
 
     //Initialize sets with 4 nodes
-    if (MAX_CITIES >= 4) {
-	for (int j = 0; j < MAX_CITIES; j++) {
-	    for (int k = 0; k < MAX_CITIES; k++) {
-		for (int l = 0; l < MAX_CITIES; l++) {
+    if (n_nodes >= 4) {
+	for (int j = 0; j < n_nodes; j++) {
+	    for (int k = 0; k < n_nodes; k++) {
+		for (int l = 0; l < n_nodes; l++) {
 		    if (start != j && start != k && start != l &&
 			j != k && j != l &&
 			k != l) {
@@ -151,18 +151,18 @@ solution path(int start) {
     if (DEBUG) cout << "DP..." << endl;
 
     //DP loop
-    for (int i = 4; i < MAX_CITIES; i++) {
+    for (int i = 4; i < n_nodes; i++) {
 	for (int j = 0; j < MAX_POWER; j++) {
 	    if (in_set(0, j) && sum_bits(j) > 4) {
 		for (int l = 0; l < 2; l++) {
 		    for (int m = 0; m < 2; m++) {
 			for (int n = 0; n < 2; n++) {
-			    for (int k = 0; k < MAX_CITIES; k++) {
+			    for (int k = 0; k < n_nodes; k++) {
 				if (in_set(k, j) && k != start) {
 				    int bdst = MAX_PATH_LENGTH;
 				    int last_node, c1, c2, c3;
 				    if (!(l == m && m == n && n == colors[k])) {
-					for (int o = 0; o < MAX_CITIES; o++) {
+					for (int o = 0; o < n_nodes; o++) {
 					    if (in_set(o, j) && o != k && o != start && colors[o] == l) {
 						bdst = min(bdst, C[set_minus(k, j)][o][m][n][RED] + dist[o][k]);
 						bdst = min(bdst, C[set_minus(k, j)][o][m][n][BLUE] + dist[o][k]);
@@ -238,8 +238,7 @@ solution path(int start) {
     return (solution){best_dist, path};
 }
 
-void solve(string fname) {
-    freopen(fname.c_str(), "r", stdin);
+void solve() {
 
     //Read input
     cin >> n_nodes;
@@ -287,5 +286,5 @@ void solve(string fname) {
 }
 
 int main(void) {
-    solve("inputs/5.in");
+    solve();
 }
