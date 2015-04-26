@@ -1,3 +1,4 @@
+import tsp_approximate
 T = 1 # number of test cases
 fout = open ("answer.out", "w")
 for t in xrange(1, T+1):
@@ -9,9 +10,7 @@ for t in xrange(1, T+1):
     c = fin.readline()
 
     # find an answer, and put into assign
-    assign = [0] * N
-    for i in xrange(N):
-        assign[i] = i+1
+    assign = tsp_approximate.approximate_tsp(N, d, c)
 
     fout.write("%s\n" % " ".join(map(str, assign)))
 fout.close()
