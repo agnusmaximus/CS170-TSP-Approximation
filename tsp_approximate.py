@@ -19,7 +19,7 @@ def approximate_tsp(n, m, c):
 
 	p, cost = path.find_path(0, metric_m, c)
 	p = check_start_paths(n, metric_m, c)
-	p = k_search(5, n, metric_m, c, p, 100)
+	p = k_search(6, n, metric_m, c, p, 100)
 	cost, x = check_cost(p, m, c)
         if DEBUG:
                 print p, cost
