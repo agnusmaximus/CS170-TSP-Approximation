@@ -10,6 +10,7 @@ using namespace std;
         ( std::ostringstream() << std::dec << x ) ).str()
 
 #define DEBUG 1
+#define CHECK 1
 #define MAX_CITIES 15
 #define MAX_POWER (1<<MAX_CITIES)
 
@@ -66,6 +67,28 @@ void setup() {
     memset(C, 0x1, sizeof(int)*MAX_POWER*MAX_CITIES*27);
     memset(P, 0x1, sizeof(recon)*MAX_POWER*MAX_CITIES*27);
     if (DEBUG) cout << "done." << endl;
+}
+
+void check_costs(solution &best_s) {
+    int computed_cost = 0;
+    for (int i = 1; i < best_s.path.size(); i++) {
+	computed_cost += dist[best_s.path[i]][best_s.path[i-1]];
+    }
+    if (computed_cost != best_s.cost) {
+	cout << "ERROR: Check Failed, costs do not match!\n" << endl;
+	exit(0);
+    }
+}
+
+void check_colors(solution &best_s) {
+    int computed_cost = 0;
+    for (int i = 1; i < best_s.path.size(); i++) {
+	computed_cost += dist[best_s.path[i]][best_s.path[i-1]];
+	}
+    if (computed_cost != best_s.cost) {
+	cout << "ERROR: Check Failed, costs do not match!\n" << endl;
+	exit(0);
+    }
 }
 
 solution path(int start) {
@@ -235,7 +258,7 @@ void solve(string fname) {
     solution best_s;
     for (int i = 0; i < n_nodes; i++) {
 	solution s = path(i);
-	if (s.cost < best_cost) {
+	if (s.cost <= best_cost) {
 	    best_cost = s.cost;
 	    best_s = s;
 	}
@@ -250,9 +273,19 @@ void solve(string fname) {
     cout << endl;
 
     //Check solution
+    if (CHECK) {
+	if (DEBUG) cout << "Checking solution..." << endl;
 
+	//Check costs
+	check_costs(best_s);
+
+	//Check different colors
+	check_colors(best_s);
+
+	if (DEBUG) cout << "Checks Passed." << endl;
+    }
 }
 
 int main(void) {
-    solve("10.in");
+    solve("inputs/5.in");
 }
