@@ -4,7 +4,7 @@ import random
 
 SMALLEST = 4
 LARGEST = 15
-N = 10
+N = 100
 MAX_VALUE = 100
 MIN_VALUE = 0
 
@@ -36,6 +36,7 @@ def generate_case(n_cities, index, output_dir_str):
         colors += c
 
     # Write adj matrix to file
+    print(n_cities, file=f)
     for row in adj_mat:
         for val in row:
             f.write(str(val) + " ")

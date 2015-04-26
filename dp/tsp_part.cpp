@@ -9,8 +9,11 @@ using namespace std;
 #define SSTR( x ) dynamic_cast< std::ostringstream & >( \
         ( std::ostringstream() << std::dec << x ) ).str()
 
-#define DEBUG 1
-#define CHECK 1
+#define DEBUG 0
+#define CHECK 0
+#define PRINT_PATH 0
+#define PRINT_COST 1
+
 #define MAX_CITIES 15
 #define MAX_POWER (1<<MAX_CITIES)
 
@@ -38,7 +41,7 @@ int C[MAX_POWER][MAX_CITIES][3][3][3];
 recon P[MAX_POWER][MAX_CITIES][3][3][3];
 
 //Maximum path lenght
-#define MAX_PATH_LENGTH 1 << 30
+#define MAX_PATH_LENGTH 16843000
 
 int city_bit_index(int k) {
     return 1 << k;
@@ -223,6 +226,8 @@ solution path(int start) {
 
     if (best_dist >= MAX_PATH_LENGTH) return (solution){best_dist, vector<int>()};
 
+    if (DEBUG) cout << "Reconstructing solution..." << endl;
+
     //reconstruct the path
     vector<int> path;
     while (end_city != start) {
@@ -235,10 +240,11 @@ solution path(int start) {
 	lllc = r.c3;
     }
     path.insert(path.begin(), end_city);
+    if (DEBUG) cout << "done." << endl;
     return (solution){best_dist, path};
 }
 
-void solve() {
+int solve() {
 
     //Read input
     cin >> n_nodes;
@@ -265,24 +271,30 @@ void solve() {
     }
 
     //Print solution
-    cout << "BEST: " << best_s.cost << endl;
+    if (PRINT_COST)
+	cout << best_s.cost << endl;
     for (int i = 0; i < best_s.path.size(); i++) {
-	cout << best_s.path[i] << " ";
+	if (PRINT_PATH)
+	    cout << best_s.path[i] << " ";
     }
-    cout << endl;
+    if (PRINT_PATH)
+	cout << endl;
 
     //Check solution
     if (CHECK) {
 	if (DEBUG) cout << "Checking solution..." << endl;
 
-	//Check costs
-	check_costs(best_s);
+	if (best_s.cost < MAX_PATH_LENGTH) {
+	    //Check costs
+	    check_costs(best_s);
 
-	//Check different colors
-	check_colors(best_s);
+	    //Check different colors
+	    check_colors(best_s);
+	}
 
 	if (DEBUG) cout << "Checks Passed." << endl;
     }
+    return best_s.cost;
 }
 
 int main(void) {
