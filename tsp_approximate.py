@@ -17,13 +17,17 @@ def approximate_tsp(n, m, c):
 	for row in m:
 		new_row = [max_edge + i for i in row]
 		metric_m.append(new_row)
-
+		
 	p, cost = path.find_path(0, m, c)
 	p = check_start_paths(n, m, c)
-	k = int(math.ceil(len(m)/8))
-	if k < 2:
-		k = 2
+	# k = int(math.ceil(len(m)/8))
+	# if k < 2:
+		# k = 2
 	p = k_search(3, n, m, c, p, 1000)
+	# p, cost = path.find_path(0, metric_m, c)
+	# p = check_start_paths(n, metric_m, c)
+	# p = k_search(6, n, metric_m, c, p, 100)
+
 	cost, x = check_cost(p, m, c)
         if DEBUG:
                 print p, cost

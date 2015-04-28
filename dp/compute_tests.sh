@@ -1,6 +1,7 @@
 make
 FILES=../test_gen/inputs/*
 OFILE=../test_gen/outputs/
+OOFILE=../test_gen/outputs/approx
 i=0
 for f in $FILES
 do
