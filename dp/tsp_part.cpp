@@ -9,9 +9,9 @@ using namespace std;
 #define SSTR( x ) dynamic_cast< std::ostringstream & >( \
         ( std::ostringstream() << std::dec << x ) ).str()
 
-#define DEBUG 0
-#define CHECK 0
-#define PRINT_PATH 0
+#define DEBUG 1
+#define CHECK 1
+#define PRINT_PATH 1
 #define PRINT_COST 1
 
 #define MAX_CITIES 15
@@ -154,37 +154,39 @@ solution path(int start) {
     if (DEBUG) cout << "DP..." << endl;
 
     //DP loop
-    for (int j = 0; j < MAX_POWER; j++) {
-	if (in_set(0, j) && sum_bits(j) > 4) {
-	    for (int l = 0; l < 2; l++) {
-		for (int m = 0; m < 2; m++) {
-		    for (int n = 0; n < 2; n++) {
-			for (int k = 0; k < n_nodes; k++) {
-			    if (in_set(k, j) && k != start) {
-				int bdst = MAX_PATH_LENGTH;
-				int last_node, c1, c2, c3;
-				if (!(l == m && m == n && n == colors[k])) {
-				    for (int o = 0; o < n_nodes; o++) {
-					if (in_set(o, j) && o != k && o != start && colors[o] == l) {
-					    bdst = min(bdst, C[set_minus(k, j)][o][m][n][RED] + dist[o][k]);
-					    bdst = min(bdst, C[set_minus(k, j)][o][m][n][BLUE] + dist[o][k]);
-					    if (bdst == C[set_minus(k, j)][o][m][n][RED] + dist[o][k]) {
-						last_node = o;
-						c1 = m;
+    for (int i = 4; i <= n_nodes; i++) {
+	for (int j = 0; j < MAX_POWER; j++) {
+	    if (in_set(start, j) && sum_bits(j) > i) {
+		for (int l = 0; l < 2; l++) {
+		    for (int m = 0; m < 2; m++) {
+			for (int n = 0; n < 2; n++) {
+			    for (int k = 0; k < n_nodes; k++) {
+				if (in_set(k, j) && k != start) {
+				    int bdst = MAX_PATH_LENGTH;
+				    int last_node, c1, c2, c3;
+				    if (!(l == m && m == n && n == colors[k])) {
+					for (int o = 0; o < n_nodes; o++) {
+					    if (in_set(o, j) && o != k && o != start && colors[o] == l) {
+						bdst = min(bdst, C[set_minus(k, j)][o][m][n][RED] + dist[o][k]);
+						bdst = min(bdst, C[set_minus(k, j)][o][m][n][BLUE] + dist[o][k]);
+						if (bdst == C[set_minus(k, j)][o][m][n][RED] + dist[o][k]) {
+						    last_node = o;
+						    c1 = m;
 						c2 = n;
 						c3 = RED;
-					    }
-					    if (bdst == C[set_minus(k, j)][o][m][n][BLUE] + dist[o][k]) {
-						last_node = o;
-						c1 = m;
-						c2 = n;
-						c3 = BLUE;
+						}
+						if (bdst == C[set_minus(k, j)][o][m][n][BLUE] + dist[o][k]) {
+						    last_node = o;
+						    c1 = m;
+						    c2 = n;
+						    c3 = BLUE;
+						}
 					    }
 					}
 				    }
+				    C[j][k][l][m][n] = bdst;
+				    P[j][k][l][m][n] = (recon){last_node, c1, c2, c3};
 				}
-				C[j][k][l][m][n] = bdst;
-				P[j][k][l][m][n] = (recon){last_node, c1, c2, c3};
 			    }
 			}
 		    }

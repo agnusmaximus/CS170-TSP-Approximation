@@ -17,7 +17,7 @@ def approximate_tsp(n, m, c):
 	for row in m:
 		new_row = [max_edge + i for i in row]
 		metric_m.append(new_row)
-		
+
 	p, cost = path.find_path(0, m, c)
 	p = check_start_paths(n, m, c)
 	# k = int(math.ceil(len(m)/8))
@@ -65,7 +65,7 @@ def k_search(k, n, m, colors, path, num_times):
 			i = random.randint(1, len(m))
 			if i not in nums:
 				nums.append(i)
-				
+
 		p = [i for i in best_path if i not in nums]
 		for placement in all_placements:
 			new_p = p[:]
@@ -90,7 +90,7 @@ def k_search(k, n, m, colors, path, num_times):
 
 
 	# while num_times > 0:
-				
+
 		# p = [i for i in best_path if i not in nums]
 		# for placement in all_placements:
 			# new_p = p[:]
@@ -104,7 +104,7 @@ def k_search(k, n, m, colors, path, num_times):
 				# best_path = new_p[:]
 		# num_times -= 1
 	# return best_path
-	
+
 def check_cost(perm, d, c):
 	N = len(d)
 	v = [0 for i in range(N)]
@@ -130,4 +130,3 @@ def check_cost(perm, d, c):
 
 		cost += d[cur][next]
 	return cost, True
-	
