@@ -2,8 +2,8 @@ from __future__ import print_function
 import sys
 import random
 
-SMALLEST = 14
-LARGEST = 14
+SMALLEST = 6
+LARGEST = 16
 N = 10
 MAX_VALUE = 100
 MIN_VALUE = 0
@@ -41,5 +41,7 @@ def generate_case(n_cities, index, output_dir_str):
     print(colors, file=f)
 
 for i in range(N):
-    n_cities = random.randint(SMALLEST, LARGEST)
+    n_cities = 1
+    while n_cities % 2 == 1:
+        n_cities = random.randint(SMALLEST, LARGEST)
     generate_case(n_cities, i, output_dir)

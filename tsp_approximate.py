@@ -3,7 +3,7 @@ import itertools
 import random
 import math
 
-DEBUG = 1
+DEBUG = 0
 
 def approximate_tsp(n, m, c):
 	max_edge = 0
