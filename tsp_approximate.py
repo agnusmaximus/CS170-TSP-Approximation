@@ -3,7 +3,7 @@ import itertools
 import random
 import math
 
-DEBUG = 1
+DEBUG = 0
 
 def approximate_tsp(n, m, c):
 	max_edge = 0
@@ -19,7 +19,8 @@ def approximate_tsp(n, m, c):
 		metric_m.append(new_row)
 
 	p, cost = path.find_path(0, m, c)
-	p = check_start_paths(n, m, c)
+
+	#p = check_start_paths(n, m, c)
 	# k = int(math.ceil(len(m)/8))
 	# if k < 2:
 		# k = 2
@@ -31,6 +32,7 @@ def approximate_tsp(n, m, c):
 	cost, x = check_cost(p, m, c)
         if DEBUG:
                 print p, cost
+	print p
 	return p, cost
 
 def check_start_paths(n, m, c):
@@ -78,15 +80,19 @@ def k_search(k, n, m, colors, path, num_times):
 				best_cost = cost
 				best_path = new_p[:]
 		num_times -= 1
-	return best_path
+	if check_cost(best_path, m, colors):
+		return best_path
+	else:
+		print "FAIL"
+	return None
 
 
 
-# def k_random(k, num_times, m, c):
+# def k_random(k, num_times, m, path, c):
 	# best_cost, x = check_cost(path, m, colors)
         # if DEBUG:
                 # print "cost", best_cost
-	# best_path = list(range(1, len(colors)+1))
+	# best_path = path[:]
 
 
 	# while num_times > 0:
@@ -130,3 +136,39 @@ def check_cost(perm, d, c):
 
 		cost += d[cur][next]
 	return cost, True
+
+	
+# def check_valid(p, d, c):
+	# if len(p) != len(d):
+		# return False
+	# if len(p) != len(c):
+		# return False
+	##check for duplicate numbers
+	# seen = set()
+	# for num in p:
+		# if num in seen:
+			# return False
+		# else:
+			# seen.add(num)
+			
+	##check for color violations
+	# red = 0
+	# blue = 0
+	# for i in range(len(p)):
+		# print "p ", p, " len ", len
+		# if c[p[i]] == 'R':
+			# red += 1
+			# blue = 0
+		# else:
+			# red = 0
+			# blue += 1
+		# if red > 3 or blue > 3:
+			# return False
+	# return True
+
+def find_cost(p, d):
+	total = 0
+	for i in range(len(p)-1):
+		total += d[i][i+1]
+	return total
+
