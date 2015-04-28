@@ -3,7 +3,7 @@ import itertools
 import random
 import math
 
-DEBUG = 0
+DEBUG = 1
 
 def approximate_tsp(n, m, c):
 	max_edge = 0
@@ -23,7 +23,7 @@ def approximate_tsp(n, m, c):
 	# k = int(math.ceil(len(m)/8))
 	# if k < 2:
 		# k = 2
-	p = k_search(3, n, m, c, p, 1000)
+	p = k_search(3, n, m, c, p, 30)
 	# p, cost = path.find_path(0, metric_m, c)
 	# p = check_start_paths(n, metric_m, c)
 	# p = k_search(6, n, metric_m, c, p, 100)
