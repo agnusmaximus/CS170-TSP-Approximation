@@ -2,11 +2,11 @@ from __future__ import print_function
 import sys
 import random
 
-SMALLEST = 30
+SMALLEST = 50
 LARGEST = 50
 N = 10
 MAX_VALUE = 100
-MIN_VALUE = 0
+MIN_VALUE = 30
 
 output_dir = sys.stdin.readline().strip()
 

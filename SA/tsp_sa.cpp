@@ -17,8 +17,8 @@ using namespace std;
 
 #define GAP 100000
 #define DEBUG 1
-#define N_ITER 50000
-#define NN_ITER 5
+#define N_ITER 5000
+#define NN_ITER 10
 
 int n_nodes;
 int dist[MAX_CITIES][MAX_CITIES];
@@ -171,7 +171,7 @@ int main(void) {
 		temp *= C;
 	    iteration++;
 	    }
-	    if (rand() % (k+1) < N_ITER-1) {
+	    if (rand() % (k+1) < N_ITER/2) {
 		copy_path(best_path, cur_path);
 		copy_path(best_path, new_path);
 	    }
