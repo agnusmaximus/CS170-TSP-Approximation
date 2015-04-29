@@ -2,7 +2,7 @@ from __future__ import print_function
 import sys
 import random
 
-SMALLEST = 40
+SMALLEST = 30
 LARGEST = 50
 N = 10
 MAX_VALUE = 100

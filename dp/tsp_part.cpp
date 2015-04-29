@@ -9,9 +9,9 @@ using namespace std;
 #define SSTR( x ) dynamic_cast< std::ostringstream & >( \
         ( std::ostringstream() << std::dec << x ) ).str()
 
-#define DEBUG 0
+#define DEBUG 1
 #define CHECK 1
-#define PRINT_PATH 0
+#define PRINT_PATH 1
 #define PRINT_COST 1
 
 #define MAX_CITIES 16
