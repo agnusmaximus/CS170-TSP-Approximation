@@ -3,6 +3,8 @@
 #include <set>
 #include <vector>
 #include <time.h>
+#include <cstdlib>
+#include <algorithm>
 
 using namespace std;
 
