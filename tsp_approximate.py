@@ -3,7 +3,7 @@ import itertools
 import random
 import math
 
-DEBUG = 0
+DEBUG = 1
 
 def approximate_tsp(n, m, c):
 	max_edge = 0
@@ -20,14 +20,15 @@ def approximate_tsp(n, m, c):
 
 	p, cost = path.find_path(0, m, c)
 
-	#p = check_start_paths(n, m, c)
+	p = check_start_paths(n, m, c)
 	# k = int(math.ceil(len(m)/8))
 	# if k < 2:
 		# k = 2
-	p = k_search(3, n, m, c, p, 30)
+	p = k_search(3, n, m, c, p, 100)
 	# p, cost = path.find_path(0, metric_m, c)
 	# p = check_start_paths(n, metric_m, c)
 	# p = k_search(6, n, metric_m, c, p, 100)
+	#p = k_random(10, 10, m, p, c)
 
 	cost, x = check_cost(p, m, c)
         if DEBUG:
@@ -88,27 +89,24 @@ def k_search(k, n, m, colors, path, num_times):
 
 
 
-# def k_random(k, num_times, m, path, c):
+# def k_random(k, num_times, m, path, colors):
 	# best_cost, x = check_cost(path, m, colors)
         # if DEBUG:
-                # print "cost", best_cost
+            # print "cost", best_cost
 	# best_path = path[:]
 
-
 	# while num_times > 0:
-
-		# p = [i for i in best_path if i not in nums]
-		# for placement in all_placements:
-			# new_p = p[:]
-			# for i in range(len(nums)):
-				# new_p.insert(placement[i], nums[i])
-			# cost, valid = check_cost(new_p, m, colors)
-			# if cost < best_cost and valid:
-				# if DEBUG:
-						# print "new path", new_p, cost, "iteration", total - num_times, " best ", best_path
-				# best_cost = cost
-				# best_path = new_p[:]
-		# num_times -= 1
+		# print "hi"
+		# new_p = best_path[:]
+		# for i in range(k):
+			# index = random.randint(0, len(m)-2)
+			# new_p[index], new_p[index+1] = new_p[index+1], new_p[index]
+		# cost, valid = check_cost(path, m, colors)
+		# if valid and cost < best_cost:
+			# if DEBUG:
+				# print "cost: ", cost, " path: ", new_p
+			# best_path = new_p
+		# num_times-=1
 	# return best_path
 
 def check_cost(perm, d, c):
@@ -136,35 +134,6 @@ def check_cost(perm, d, c):
 
 		cost += d[cur][next]
 	return cost, True
-
-	
-# def check_valid(p, d, c):
-	# if len(p) != len(d):
-		# return False
-	# if len(p) != len(c):
-		# return False
-	##check for duplicate numbers
-	# seen = set()
-	# for num in p:
-		# if num in seen:
-			# return False
-		# else:
-			# seen.add(num)
-			
-	##check for color violations
-	# red = 0
-	# blue = 0
-	# for i in range(len(p)):
-		# print "p ", p, " len ", len
-		# if c[p[i]] == 'R':
-			# red += 1
-			# blue = 0
-		# else:
-			# red = 0
-			# blue += 1
-		# if red > 3 or blue > 3:
-			# return False
-	# return True
 
 def find_cost(p, d):
 	total = 0
