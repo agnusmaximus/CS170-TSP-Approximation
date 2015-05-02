@@ -227,32 +227,32 @@ int main(void) {
 	 // create_greedy_path(cur_path, 6);
 	
 	diff_start_paths(cur_path);
-    // copy_path(cur_path, new_path);
-    // copy_path(cur_path, best_path);
-    // for (int k = 0; k < NN_ITER; k++) {
-	// for (int i = 0; i < N_ITER; i++) {
-	    // long double temp = strt / (i+1);
-	    // while (temp > T_END) {
-		// if (iteration % GAP == 0 && DEBUG) print_path(cur_path);
-		// perturb_path(new_path);
-		// if (new_path.cost < cur_path.cost ||
-		    // pow(MATH_E, -(new_path.cost-cur_path.cost)/(double)temp) > rand01()) {
-		    // copy_path(new_path, cur_path);
-		// }
-		// else {
-		    // copy_path(cur_path, new_path);
-		// }
-		// if (cur_path.cost < best_path.cost) {
-		    // copy_path(cur_path, best_path);
-		// }
-		// temp *= C;
-	    // iteration++;
-	    // }
-	    // if (rand() % (k+1) < N_ITER/2) {
-		// copy_path(best_path, cur_path);
-		// copy_path(best_path, new_path);
-	    // }
-	// }
-    // }
-    // print_path(best_path);
+    copy_path(cur_path, new_path);
+    copy_path(cur_path, best_path);
+    for (int k = 0; k < NN_ITER; k++) {
+	for (int i = 0; i < N_ITER; i++) {
+	    long double temp = strt / (i+1);
+	    while (temp > T_END) {
+		if (iteration % GAP == 0 && DEBUG) print_path(cur_path);
+		perturb_path(new_path);
+		if (new_path.cost < cur_path.cost ||
+		    pow(MATH_E, -(new_path.cost-cur_path.cost)/(double)temp) > rand01()) {
+		    copy_path(new_path, cur_path);
+		}
+		else {
+		    copy_path(cur_path, new_path);
+		}
+		if (cur_path.cost < best_path.cost) {
+		    copy_path(cur_path, best_path);
+		}
+		temp *= C;
+	    iteration++;
+	    }
+	    if (rand() % (k+1) < N_ITER/2) {
+		copy_path(best_path, cur_path);
+		copy_path(best_path, new_path);
+	    }
+	}
+    }
+    print_path(best_path);
 }
