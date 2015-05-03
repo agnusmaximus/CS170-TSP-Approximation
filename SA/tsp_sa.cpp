@@ -3,6 +3,8 @@
 #include <set>
 #include <vector>
 #include <time.h>
+#include <cstdlib>
+#include <algorithm>
 
 using namespace std;
 
@@ -13,7 +15,7 @@ using namespace std;
 #define MATH_E 2.71828
 
 #define T_END .1
-#define C .9995
+#define C .99
 
 #define GAP 100000
 #define DEBUG 1
@@ -144,12 +146,87 @@ int sum_top_nodes() {
     return s;
 }
 
+void create_greedy_path(Path &p, int curr) {
+	int visited[n_nodes];
+	for (int i = 0; i < n_nodes; i++)
+		visited[i] = 0;
+	int same_color = 1;
+	int red = n_nodes/2;
+	int blue = n_nodes/2;
+	if (colors[curr] == RED)
+		red--;
+	else
+		blue--;
+	visited[curr] = 1;
+	p.cities[0] = curr;
+	p.cost = 0;
+	int index = 1;
+	
+	while(index < n_nodes) {
+		int min_cost = 101;
+		int next = -1;
+		for (int j = 0; j < n_nodes; j++) {
+			if(dist[curr][j] < min_cost && curr != j && visited[j] == 0) {
+				if (colors[curr] == colors[j] && same_color >= 3)
+					continue;
+				if (colors[j] == RED && (red-1)*3 < blue && red > 1)
+					continue;
+				if (colors[j] == BLUE && (blue-1)*3 < red && blue > 1)
+					continue;
+				next = j;
+				min_cost = dist[curr][j];
+				// if (!(colors[curr] == colors[j] && same_color >= 3) && !(colors[j] == RED && red == n_nodes/2-1 && blue <= n_nodes/2-4) && !(colors[j] == BLUE && blue == n_nodes/2-1 && red <= n_nodes/2-4)) {
+					// next = j;
+					// min_cost = dist[curr][j];
+				// }
+			}
+		}
+		p.cities[index] = next;
+		index++;
+		p.cost += dist[curr][next];
+		visited[next] = 1;
+		
+		if (colors[next] == RED)
+			red--;
+		else
+			blue--;
+			
+		if (colors[curr] == colors[next])
+			same_color++;
+		else
+			same_color = 1;
+		min_cost = 101;
+		curr = next;
+	}
+	// for (int i = 0; i < n_nodes; i++)
+		// cout << "i: " << i << " val: " << visited[i];
+	print_path(p);
+	if (is_valid_path(p))
+		cout << "done" << endl;
+	else 
+		cout << "not done" << endl;
+}
+
+void diff_start_paths(Path &p) {
+	Path temp_p;
+	copy_path(p, temp_p);
+	for (int i = 0; i < n_nodes; i++) {
+		create_greedy_path(temp_p, i);
+		if (temp_p.cost < p.cost)
+			copy_path(temp_p, p);
+	}
+}
+
+
 int main(void) {
     srand(time(NULL));
     read_input();
     Path cur_path, new_path, best_path;
     int iteration = 0, strt = sum_top_nodes() * 2;
-    create_initial_path(cur_path);
+   // create_initial_path(cur_path);
+	 // create_greedy_path(cur_path, 6);
+	
+	diff_start_paths(cur_path);
     copy_path(cur_path, new_path);
     copy_path(cur_path, best_path);
     for (int k = 0; k < NN_ITER; k++) {

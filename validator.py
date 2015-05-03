@@ -32,7 +32,7 @@ def processFile(s):
       return "The distance from a node to itself must be 0."
     for j in xrange(N):
       if d[i][j] != d[j][i]:
-        return "The distance matrix must be symmetric."
+        return "The distance matrix must be symmetric." + " i: " + str(i) + " j: " + str(j) + " i val: " + str(d[i][j]) + " j val: " + str(d[j][i])
 
   line = fin.readline()
   if len(line) != N:
