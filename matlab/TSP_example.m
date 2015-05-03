@@ -1,3 +1,5 @@
+profile on
+
 RED=0;
 BLUE=1;
 NOCOLOR=2;
@@ -5,11 +7,14 @@ NOCOLOR=2;
 figure;
 
 load('usborder.mat','x','y','xx','yy');
-rng('shuffle','twister') % makes a plot with stops in Maine & Florida, and is reproducible
+%rng(39,'twister') % makes a plot with stops in Maine & Florida, and is reproducible
+rng('shuffle', 'twister')
 nStops = 50; % you can use any number, but the problem size scales as N^2
 stopsLon = zeros(nStops,1); % allocate x-coordinates of nStops
 stopsLat = stopsLon; % allocate y-coordinates
-color = [];
+% color = [];
+color = [ones(1, nStops/2), zeros(1, nStops/2)];
+color = color(randperm(length(color)));
 n = 1;
 while (n <= nStops+1)
     xp = rand*1.5;
@@ -17,11 +22,6 @@ while (n <= nStops+1)
     if inpolygon(xp,yp,xx,yy) % test if inside the border
         stopsLon(n) = xp;
         stopsLat(n) = yp;
-        if randi([1,2])==1
-            color(n) = RED;
-        else
-            color(n) = BLUE;
-        end
         n = n+1;       
     end
 end
@@ -41,6 +41,7 @@ for i=1:nStops
     end
 end
     
+labels = cellstr(num2str([1:nStops+1]'));
 plot(x,y,'Color','red'); % draw the outside border
 hold on
 % Add the stops to the map
@@ -48,6 +49,8 @@ hold on
 plot(bluexs,blueys,'*b')
 plot(redxs,redys,'*r')
 plot(stopsLon(nStops+1),stopsLat(nStops+1),'*g')
+text(stopsLon, stopsLat, labels, 'VerticalAlignment','bottom', ...
+                                 'HorizontalAlignment','right')
 hold off
 
 idxs = nchoosek(1:nStops+1,2);
@@ -141,16 +144,16 @@ while numtours > 1 || isinvalid > 0 % repeat until there is just one subtour
         disp(x_tsp'*dist);
 
         % Visualize result / (also remove dummy node edges)
-        c=1;
-        xx_tsp = x_tsp;
-        for i=1:nStops+1
-            for j=i+1:nStops+1
-                if i==nStops+1 || j==nStops+1
-                    xx_tsp(c)=0;
-                end
-                c = c+1;
-            end
-        end
+         c=1;
+         xx_tsp = x_tsp;
+         for i=1:nStops+1
+             for j=i+1:nStops+1
+                 if i==nStops+1 || j==nStops+1
+                     xx_tsp(c)=0;
+                 end
+                 c = c+1;
+             end
+         end
         lh = updateSalesmanPlot(lh,xx_tsp,idxs,stopsLon,stopsLat);
 
         % How many subtours this time?
@@ -161,43 +164,44 @@ while numtours > 1 || isinvalid > 0 % repeat until there is just one subtour
     
     % Get invalid paths
     invalidPaths = detectFourConsecutives(x_tsp,color,nStops);
-    isinvalid = length(invalidPaths);
+    isinvalid = size(invalidPaths,1);
     
     % How many partial paths?
     while isinvalid > 0 && numtours == 1
         % Add constraints
-        Aeq = [Aeq;invalidPaths];
-        beq = [beq;2*ones(size(invalidPaths,1),1)];
+        A = [A;invalidPaths];
+        b = [b;2*ones(size(invalidPaths,1),1)];
         
         % Try to optimize again
         [x_tsp,costopt,exitflag,output] = intlinprog(dist,intcon,A,b,Aeq,beq,lb,ub,opts);
+        disp(exitflag);
         disp(x_tsp'*dist);
 
         % Visualize result / (also remove dummy node edges)
-        c=1;
-        xx_tsp = x_tsp;
-        for i=1:nStops+1
-            for j=i+1:nStops+1
-                if i==nStops+1 || j==nStops+1
-                    xx_tsp(c)=0;
-                end
-                c = c+1;
-            end
-        end
+         c=1;
+         xx_tsp = x_tsp;
+         for i=1:nStops+1
+             for j=i+1:nStops+1
+                 if i==nStops+1 || j==nStops+1
+                     xx_tsp(c)=0;
+                 end
+                 c = c+1;
+             end
+         end
         lh = updateSalesmanPlot(lh,xx_tsp,idxs,stopsLon,stopsLat);
         
         % How many subtours this time?
         tours = detectSubtours(x_tsp,idxs);
         numtours = length(tours); % number of subtours
         disp(numtours)
-        
+                
         if numtours ~= 1
             break
         end
         
         % Get invalid paths again
         invalidPaths = detectFourConsecutives(x_tsp,color,nStops);
-        isinvalid = length(invalidPaths);       
+        isinvalid = size(invalidPaths,1);       
     end
 end
 
@@ -207,6 +211,9 @@ disp(costopt)
 % Print path
 nodes=printpath(x_tsp, nStops);
 disp(nodes)
+disp(output.absolutegap)
 
 title('Solution with Subtours Eliminated');
 hold off
+
+profile viewer
