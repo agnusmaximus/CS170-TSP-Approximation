@@ -34,7 +34,6 @@ function [path] = TSP(filename,is_debug)
     % Convert 2-D distances into 1-D values
     index=1;
     edges=nchoosek(1:n_cities+1,2);
-    disp(edges)
     n_edges_total=(n_cities)*(n_cities+1)/2;
     dist=zeros(1,n_edges_total);
     for i=1:n_cities+1
