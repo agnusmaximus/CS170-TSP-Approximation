@@ -15,7 +15,7 @@ using namespace std;
 #define MATH_E 2.71828
 
 #define T_END .1
-#define C .99
+#define C .99999
 
 #define GAP 100000
 #define DEBUG 1
@@ -161,7 +161,7 @@ void create_greedy_path(Path &p, int curr) {
 	p.cities[0] = curr;
 	p.cost = 0;
 	int index = 1;
-	
+
 	while(index < n_nodes) {
 		int min_cost = 101;
 		int next = -1;
@@ -185,12 +185,12 @@ void create_greedy_path(Path &p, int curr) {
 		index++;
 		p.cost += dist[curr][next];
 		visited[next] = 1;
-		
+
 		if (colors[next] == RED)
 			red--;
 		else
 			blue--;
-			
+
 		if (colors[curr] == colors[next])
 			same_color++;
 		else
@@ -203,7 +203,7 @@ void create_greedy_path(Path &p, int curr) {
 	print_path(p);
 	if (is_valid_path(p))
 		cout << "done" << endl;
-	else 
+	else
 		cout << "not done" << endl;
 }
 
@@ -215,6 +215,7 @@ void diff_start_paths(Path &p) {
 		if (temp_p.cost < p.cost)
 			copy_path(temp_p, p);
 	}
+	temp_p.cost=score_path(p);
 }
 
 
@@ -225,7 +226,7 @@ int main(void) {
     int iteration = 0, strt = sum_top_nodes() * 2;
    // create_initial_path(cur_path);
 	 // create_greedy_path(cur_path, 6);
-	
+
 	diff_start_paths(cur_path);
     copy_path(cur_path, new_path);
     copy_path(cur_path, best_path);

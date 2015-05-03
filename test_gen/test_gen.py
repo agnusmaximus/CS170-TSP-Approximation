@@ -2,8 +2,8 @@ from __future__ import print_function
 import sys
 import random
 
-SMALLEST = 50
-LARGEST = 50
+SMALLEST = 10
+LARGEST = 16
 N = 10
 MAX_VALUE = 100
 MIN_VALUE = 30

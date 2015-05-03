@@ -20,7 +20,6 @@ function [invalidPaths] = detectFourConsecutives(x_tsp,color,nStops)
         c3=color(n3);
         c4=color(n4);
         if c1==c2 && c2==c3 && c3==c4
-            disp([n1,n2,n3,n4])
             badedges=zeros(1,(nStops*(nStops+1))/2);
             badedges(mapobj(n1,n2))=1;
             badedges(mapobj(n2,n3))=1;

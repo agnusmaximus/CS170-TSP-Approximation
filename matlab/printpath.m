@@ -3,7 +3,7 @@ function [nodes] = printpath(x_tsp, nStops)
     c=1;
     for i=1:nStops+1
         for j=i+1:nStops+1
-            if x_tsp(c) ~= 0 && i~=nStops+1 && j~=nStops+1
+            if x_tsp(c) ~= 0
                 p=[p;[i,j]];
             end
             c=c+1;
@@ -11,7 +11,8 @@ function [nodes] = printpath(x_tsp, nStops)
     end
     nodes=[p(1,:)];
     p(1,:)=[];
-    while length(nodes) ~= nStops
+    termcond=nStops;
+    while length(nodes) ~= nStops+1
         for i=1:length(p)
             if p(i,1)==nodes(1)
                 nodes=[p(i,end),nodes];
@@ -35,4 +36,6 @@ function [nodes] = printpath(x_tsp, nStops)
             end
         end
     end
+    dummyNodeIndex=find(nodes==nStops+1);
+    nodes=[nodes(1,dummyNodeIndex+1:end),nodes(1,1:dummyNodeIndex-1)];
 end

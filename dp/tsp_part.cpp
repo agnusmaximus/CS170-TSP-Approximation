@@ -84,12 +84,17 @@ void check_costs(solution &best_s) {
 }
 
 void check_colors(solution &best_s) {
-    int computed_cost = 0;
-    for (int i = 1; i < best_s.path.size(); i++) {
-	computed_cost += dist[best_s.path[i]][best_s.path[i-1]];
-	}
-    if (computed_cost != best_s.cost) {
-	cout << "ERROR: Check Failed, costs do not match!\n" << endl;
+    int isvalid = 1;
+    for (int i = 3; i < best_s.path.size(); i++) {
+	int c1 = colors[best_s.path[i]];
+	int c2 = colors[best_s.path[i-1]];
+	int c3 = colors[best_s.path[i-2]];
+	int c4 = colors[best_s.path[i-3]];
+	if (c1 == c2 && c2 == c3 && c3 == c4)
+	    isvalid = 0;
+    }
+    if (!isvalid) {
+	cout << "ERROR: Check Failed, bad colors!\n" << endl;
 	exit(0);
     }
 }
@@ -154,9 +159,9 @@ solution path(int start) {
     if (DEBUG) cout << "DP..." << endl;
 
     //DP loop
-    for (int i = 4; i <= n_nodes; i++) {
+    for (int i = 5; i <= n_nodes; i++) {
 	for (int j = 0; j < MAX_POWER; j++) {
-	    if (in_set(start, j) && sum_bits(j) > i) {
+	    if (in_set(start, j) && sum_bits(j) == i) {
 		for (int l = 0; l < 2; l++) {
 		    for (int m = 0; m < 2; m++) {
 			for (int n = 0; n < 2; n++) {
@@ -172,8 +177,8 @@ solution path(int start) {
 						if (bdst == C[set_minus(k, j)][o][m][n][RED] + dist[o][k]) {
 						    last_node = o;
 						    c1 = m;
-						c2 = n;
-						c3 = RED;
+						    c2 = n;
+						    c3 = RED;
 						}
 						if (bdst == C[set_minus(k, j)][o][m][n][BLUE] + dist[o][k]) {
 						    last_node = o;

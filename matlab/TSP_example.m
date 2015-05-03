@@ -22,7 +22,7 @@ while (n <= nStops+1)
     if inpolygon(xp,yp,xx,yy) % test if inside the border
         stopsLon(n) = xp;
         stopsLat(n) = yp;
-        n = n+1;       
+        n = n+1;
     end
 end
 
@@ -35,12 +35,12 @@ for i=1:nStops
     if color(i)==RED
         redxs=[redxs,stopsLon(i)];
         redys=[redys,stopsLat(i)];
-    else 
+    else
         bluexs=[bluexs,stopsLon(i)];
         blueys=[blueys,stopsLat(i)];
     end
 end
-    
+
 labels = cellstr(num2str([1:nStops+1]'));
 plot(x,y,'Color','red'); % draw the outside border
 hold on
@@ -54,8 +54,8 @@ text(stopsLon, stopsLat, labels, 'VerticalAlignment','bottom', ...
 hold off
 
 idxs = nchoosek(1:nStops+1,2);
-dist = hypot(stopsLat(idxs(:,1)) - stopsLat(idxs(:,2)), ...
-             stopsLon(idxs(:,1)) - stopsLon(idxs(:,2)));
+dist = round(100*hypot(stopsLat(idxs(:,1)) - stopsLat(idxs(:,2)), ...
+             stopsLon(idxs(:,1)) - stopsLon(idxs(:,2))));
 count=1;
 for i=1:nStops+1
     for j=i+1:nStops+1
@@ -65,7 +65,7 @@ for i=1:nStops+1
         count=count+1;
     end
 end
-         
+
 lendist = length(dist);
 
 Aeq = spones(1:length(idxs)); % Adds up the number of trips
@@ -83,7 +83,7 @@ intcon = 1:lendist;
 lb = zeros(lendist,1);
 ub = ones(lendist,1);
 
-opts = optimoptions('intlinprog','Display','off');
+opts = optimoptions('intlinprog','Display','off','CutGenMaxIter',5);
 [x_tsp,costopt,exitflag,output] = intlinprog(dist,intcon,[],[],Aeq,beq,lb,ub,opts);
 
 % Remove dummy node
@@ -138,10 +138,9 @@ while numtours > 1 || isinvalid > 0 % repeat until there is just one subtour
             end
             b(rowIdx) = length(subTourIdx)-1; % One less trip than subtour stops
         end
-    
+
         % Try to optimize again
         [x_tsp,costopt,exitflag,output] = intlinprog(dist,intcon,A,b,Aeq,beq,lb,ub,opts);
-        disp(x_tsp'*dist);
 
         % Visualize result / (also remove dummy node edges)
          c=1;
@@ -161,21 +160,19 @@ while numtours > 1 || isinvalid > 0 % repeat until there is just one subtour
         numtours = length(tours); % number of subtours
         fprintf('# of subtours: %d\n',numtours);
     end
-    
+
     % Get invalid paths
     invalidPaths = detectFourConsecutives(x_tsp,color,nStops);
     isinvalid = size(invalidPaths,1);
-    
+
     % How many partial paths?
     while isinvalid > 0 && numtours == 1
         % Add constraints
         A = [A;invalidPaths];
         b = [b;2*ones(size(invalidPaths,1),1)];
-        
+
         % Try to optimize again
         [x_tsp,costopt,exitflag,output] = intlinprog(dist,intcon,A,b,Aeq,beq,lb,ub,opts);
-        disp(exitflag);
-        disp(x_tsp'*dist);
 
         % Visualize result / (also remove dummy node edges)
          c=1;
@@ -189,19 +186,18 @@ while numtours > 1 || isinvalid > 0 % repeat until there is just one subtour
              end
          end
         lh = updateSalesmanPlot(lh,xx_tsp,idxs,stopsLon,stopsLat);
-        
+
         % How many subtours this time?
         tours = detectSubtours(x_tsp,idxs);
         numtours = length(tours); % number of subtours
-        disp(numtours)
-                
+
         if numtours ~= 1
             break
         end
-        
+
         % Get invalid paths again
         invalidPaths = detectFourConsecutives(x_tsp,color,nStops);
-        isinvalid = size(invalidPaths,1);       
+        isinvalid = size(invalidPaths,1);
     end
 end
 
@@ -210,8 +206,10 @@ disp(costopt)
 
 % Print path
 nodes=printpath(x_tsp, nStops);
+fprintf('Path:\n')
 disp(nodes)
-disp(output.absolutegap)
+fprintf('Absolute Gap(0 means optimal): %d\n', output.absolutegap)
+fprintf('Does Pass Checks? 0 for no, 1 for yes: %d\n', checkpath(nodes,color))
 
 title('Solution with Subtours Eliminated');
 hold off
