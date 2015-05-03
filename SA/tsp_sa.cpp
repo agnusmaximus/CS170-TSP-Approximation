@@ -15,7 +15,7 @@ using namespace std;
 #define MATH_E 2.71828
 
 #define T_END .1
-#define C .99999
+#define C .999
 
 #define GAP 100000
 #define DEBUG 1
@@ -215,7 +215,7 @@ void diff_start_paths(Path &p) {
 		if (temp_p.cost < p.cost)
 			copy_path(temp_p, p);
 	}
-	temp_p.cost=score_path(p);
+
 }
 
 
@@ -227,7 +227,7 @@ int main(void) {
    // create_initial_path(cur_path);
 	 // create_greedy_path(cur_path, 6);
 
-	diff_start_paths(cur_path);
+    diff_start_paths(cur_path);
     copy_path(cur_path, new_path);
     copy_path(cur_path, best_path);
     for (int k = 0; k < NN_ITER; k++) {
@@ -247,12 +247,12 @@ int main(void) {
 		    copy_path(cur_path, best_path);
 		}
 		temp *= C;
-	    iteration++;
+		iteration++;
 	    }
-	    if (rand() % (k+1) < N_ITER/2) {
+	    //if (rand() % (k+1) < N_ITER/2) {
 		copy_path(best_path, cur_path);
 		copy_path(best_path, new_path);
-	    }
+		//}
 	}
     }
     print_path(best_path);
