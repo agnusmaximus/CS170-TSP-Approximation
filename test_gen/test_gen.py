@@ -2,9 +2,9 @@ from __future__ import print_function
 import sys
 import random
 
-SMALLEST = 10
-LARGEST = 16
-N = 10
+SMALLEST = 50
+LARGEST = 50
+N = 1000
 MAX_VALUE = 100
 MIN_VALUE = 30
 
@@ -17,7 +17,7 @@ def generate_case(n_cities, index, output_dir_str):
     if output_dir_str[-1] != "/":
         output_dir_str += "/"
     fname = output_dir_str + str(index)
-    f = open(fname, "w")
+    f = open(fname+".in", "w")
 
     # Create adj_mat
     adj_mat = [[0 for i in range(n_cities)] for j in range(n_cities)]

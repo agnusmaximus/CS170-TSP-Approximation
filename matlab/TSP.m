@@ -24,16 +24,17 @@ function [path] = TSP(filename,is_debug)
             color(i)=BLUE;
         end
     end
-    if is_debug
-        disp('Adjacency Matrix:')
-        disp(adj_matrix)
-        disp('City Colors:')
-        disp(color)
-    end
+%     if is_debug
+%         disp('Adjacency Matrix:')
+%         disp(adj_matrix)
+%         disp('City Colors:')
+%         disp(color)
+%     end
     
     % Convert 2-D distances into 1-D values
     index=1;
     edges=nchoosek(1:n_cities+1,2);
+    disp(edges)
     n_edges_total=(n_cities)*(n_cities+1)/2;
     dist=zeros(1,n_edges_total);
     for i=1:n_cities+1
@@ -72,7 +73,7 @@ function [path] = TSP(filename,is_debug)
     invalidpaths=[];
     isinvalid=0;
     if numtours==1
-        invalidpaths=detectFourConsecutives(x_tsp,color,n_cities);
+        invalidpaths=detectFourConsecutives(tours{1},color,n_cities);
         isinvalid=size(invalidpaths,1);
     end
     
@@ -95,7 +96,6 @@ function [path] = TSP(filename,is_debug)
                 end
                 b(rowIdx) = length(subTourIdx)-1; % One less trip than subtour stops
             end       
-
             % Try to optimize again & check subtours
             [x_tsp,costopt,exitflag,output] = intlinprog(dist,intcond,A,b,Aeq,beq,lb,ub,opts);
             tours=detectSubtours(x_tsp,edges);
@@ -103,7 +103,7 @@ function [path] = TSP(filename,is_debug)
         end
         
         % Get invalid paths
-        invalidpaths=detectFourConsecutives(x_tsp,color,n_cities);
+        invalidpaths=detectFourConsecutives(tours{1},color,n_cities);
         isinvalid=size(invalidpaths,1);
         
         % Get rid of invalid consecutive paths
@@ -124,17 +124,20 @@ function [path] = TSP(filename,is_debug)
             end
             
             % Update invalid paths
-            invalidpaths = detectFourConsecutives(x_tsp,color,n_cities);
+            invalidpaths = detectFourConsecutives(tours{1},color,n_cities);
             isinvalid = size(invalidpaths,1);            
         end
     end    
     
-    if is_debug        
-        path=printpath(x_tsp,n_cities);
-        fprintf('Path:\n');
-        disp(path)
+    if is_debug==1
+        path=printpath(tours{1},n_cities);
+        g=sprintf('%d ',path);
+        disp(g);
         fprintf('Cost: %d\n',costopt);
         fprintf('Absolute Gap: %f\n',output.absolutegap);
         fprintf('Passes Check?: %d\n',checkpath(path,color));
+    else
+        g=sprintf('%d ',printpath(tours{1},n_cities));
+        disp(g);
     end    
 end

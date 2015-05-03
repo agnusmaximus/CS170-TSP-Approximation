@@ -23,5 +23,5 @@ function [is_ok] = check_path(p, colors)
     if is_valid2==false
         disp('Fails Cover Check')
     end
-    is_ok=is_valid && is_valid2;
+    is_ok=is_valid && is_valid2 && length(p)==length(colors);
 end

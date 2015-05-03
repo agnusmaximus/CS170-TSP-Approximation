@@ -1,7 +1,7 @@
-function [invalidPaths] = detectFourConsecutives(tour,color,nStops)
+function [invalidPaths] = detectFourConsecutives(x_tsp,color,nStops)
     mapobj=zeros(nStops+1,nStops+1);
     c=1;
-    for i=1:nStops
+    for i=1:nStops+1
         for j=i+1:nStops+1
             mapobj(i,j)=c;
             mapobj(j,i)=c;
@@ -9,7 +9,7 @@ function [invalidPaths] = detectFourConsecutives(tour,color,nStops)
         end
     end
     invalidPaths = [];
-    nodePath=printpath(tour,nStops);
+    nodePath=printpath(x_tsp,nStops);
     for i=4:length(nodePath)
         n1=nodePath(i);
         n2=nodePath(i-1);
