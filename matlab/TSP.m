@@ -24,6 +24,7 @@ function [path] = TSP(filename,is_debug)
             color(i)=BLUE;
         end
     end
+    fclose(fileid);
 %     if is_debug
 %         disp('Adjacency Matrix:')
 %         disp(adj_matrix)
