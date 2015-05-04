@@ -15,7 +15,7 @@ for ((i=0;i<${#inputfiles[@]};++i)); do
     inputfile="${inputfiles[$i]}"
     outputfile="${outputfiles[$i]}"
     echo 'Validating' $inputfile 'with input file' $outputfile;
-    python ../python/scorer_single.py $inputfile $outputfile >> $checkfile
+    python ../code/python/scorer_single.py $inputfile $outputfile >> $checkfile
     cat $outputfile >> $checkoutputfile
 done;
 echo 'Diffing' $validationfile 'and' $checkfile
