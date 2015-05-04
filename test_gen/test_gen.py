@@ -4,9 +4,9 @@ import random
 
 SMALLEST = 50
 LARGEST = 50
-N = 1000
+N = 600
 MAX_VALUE = 100
-MIN_VALUE = 30
+MIN_VALUE = 0
 
 output_dir = sys.stdin.readline().strip()
 
