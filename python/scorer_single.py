@@ -1,7 +1,7 @@
 import sys
 
 # assumes files are well formatted
-# if you have errors, make sure you double check our input and output format 
+# if you have errors, make sure you double check our input and output format
 def main(argv):
   if len(argv) != 2:
     print "Usage: python scorer_single.py [path_to_instance] [path_to_answer]"
@@ -24,7 +24,7 @@ def processCase(s, t):
   prev = 'X'
   count = 0
   for i in xrange(N):
-    if v[perm[i]-1] == 1: 
+    if v[perm[i]-1] == 1:
       return "Your answer must be a permutation of {1,...,N}."
     v[perm[i]-1] = 1
 
@@ -46,7 +46,8 @@ def processCase(s, t):
 
     cost += d[cur][next]
 
-  return "You got " + `cost` + " points for this case."
+  #return "You got " + `cost` + " points for this case."
+  return `cost`
 
 if __name__ == '__main__':
     main(sys.argv[1:])

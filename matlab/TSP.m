@@ -1,8 +1,7 @@
-function [path] = TSP(filename,is_debug)
+function [path,costopt,isopt] = TSP(filename,is_debug)
     % Color definitions
     RED=0;
     BLUE=1;
-    NOCOLOR=2;
     
     % Read file to get network properties
     fileid=fopen(filename,'r');
@@ -129,15 +128,13 @@ function [path] = TSP(filename,is_debug)
         end
     end    
     
+    path=printpath(tours{1},n_cities);
+    isopt=output.absolutegap==0;
     if is_debug==1
-        path=printpath(tours{1},n_cities);
         g=sprintf('%d ',path);
         disp(g);
         fprintf('Cost: %d\n',costopt);
         fprintf('Absolute Gap: %f\n',output.absolutegap);
         fprintf('Passes Check?: %d\n',checkpath(path,color));
-    else
-        g=sprintf('%d ',printpath(tours{1},n_cities));
-        disp(g);
-    end    
+    end  
 end
