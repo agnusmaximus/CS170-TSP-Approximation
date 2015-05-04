@@ -4,7 +4,7 @@ import random
 
 SMALLEST = 50
 LARGEST = 50
-N = 10
+N = 600
 MAX_VALUE = 100
 MIN_VALUE = 0
 
