@@ -8,8 +8,8 @@ function [retvalue] = solve(input_directory,output_directory)
     files=files(index);
     
     % Process files
-    validationfilepath=strcat(output_directory,'validation_output');
-    totaloutputfilepath=strcat(output_directory,'all_output');
+    validationfilepath=strcat(output_directory,'validation.out');
+    totaloutputfilepath=strcat(output_directory,'all.out');
     totaloutputfile=fopen(totaloutputfilepath,'w');
     validationfile=fopen(validationfilepath,'w');
     n_optimal=0;
@@ -19,8 +19,8 @@ function [retvalue] = solve(input_directory,output_directory)
         fprintf('%s\n',strcat('Processing:',filepath));
         
         % Individual output file
-        [pathstr,name,ext]=fileparts(char(files(i)));
-        cur_out_file=fopen(strcat(output_directory,name,'.out'),'w');
+        name=
+        cur_out_file=fopen(strcat(output_directory,fileparts(char(files(i)))),'w');
         
         % Solve
         [path,costopt,isopt]=TSP(filepath,0);
@@ -29,7 +29,7 @@ function [retvalue] = solve(input_directory,output_directory)
         g=sprintf('%d ',path);
         fprintf(totaloutputfile,'%s\n',g);
         fprintf(cur_out_file,'%s\n',g);
-        fprintf(validationfile,'%g\n',costopt);        
+        fprintf(validationfile,'%d\n',costopt);        
         
         % Close file
         fclose(cur_out_file);
