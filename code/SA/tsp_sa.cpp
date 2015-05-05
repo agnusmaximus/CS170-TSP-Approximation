@@ -224,10 +224,10 @@ int main(void) {
     read_input();
     Path cur_path, new_path, best_path;
     int iteration = 0, strt = sum_top_nodes() * 2;
-    create_initial_path(cur_path);
-	 // create_greedy_path(cur_path, 6);
+    //create_initial_path(cur_path);
+    //create_greedy_path(cur_path, 6);
 
-    //diff_start_paths(cur_path);
+    diff_start_paths(cur_path);
     copy_path(cur_path, new_path);
     copy_path(cur_path, best_path);
     for (int k = 0; k < NN_ITER; k++) {
