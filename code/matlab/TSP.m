@@ -65,23 +65,23 @@ function [path,costopt,isopt,exitval] = TSP(filename,is_debug,limitsec)
     % Add color constraints
     A=[];
     b=[];
-%     if is_debug
-%         disp('Color Constraints...')
-%     end    
-%     for i=1:n_cities
-%        invalidpaths=getconstr(i,color,n_cities);
-%        A=[A;invalidpaths];
-%        b=[b;2*ones(size(invalidpaths,1),1)];
-%        if is_debug
-%            fprintf('Added constraints for node %d\n',i);
-%        end
-%     end
-%     if is_debug
-%         disp('Done With Color Constraints...')
-%     end
+    if is_debug
+        disp('Color Constraints...')
+    end    
+    for i=1:n_cities
+       invalidpaths=getconstr(i,color,n_cities);
+       A=[A;invalidpaths];
+       b=[b;2*ones(size(invalidpaths,1),1)];
+       if is_debug
+           fprintf('Added constraints for node %d\n',i);
+       end
+    end
+    if is_debug
+        disp('Done With Color Constraints...')
+    end
     
     % Set options, and solve initial relaxed problem
-    opts=optimoptions('intlinprog','Display','off','MaxTime',limitsec);
+    opts=optimoptions('intlinprog','Display','iter','MaxTime',limitsec,'IPPreprocess','advanced','CutGeneration','advanced','CutGenMaxIter',25)
     [x_tsp,costopt,exitflag,output]=intlinprog(dist,intcond,A,b,Aeq,beq,lb,ub,opts);
     
     % Get subtours and invalid paths
