@@ -1,4 +1,4 @@
-% Created 2015-05-04 Mon 22:59
+% Created 2015-05-05 Tue 15:14
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -19,7 +19,7 @@
 \usepackage[a4paper,margin=1cm,footskip=.5cm]{geometry}
 \usepackage{listings}
 \usepackage{amsmath}
-\author{Name: Max Lam | Section: 109 \\ Partners: Maya Reddy, Sneha Sankavaram, Natasha Sandy \\ Team Name:LMMNRSSS | Login-Submitted-With:abcd}
+\author{Name: Max Lam | Section: 109 \\ Partners: Maya Reddy, Sneha Sankavaram, Natasha Sandy \\ Team Name:LMMNRSSS | Login-Submitted-With:cs170-qg}
 \date{\today}
 \title{NPTSP Project}
 \hypersetup{
@@ -38,8 +38,9 @@
 \label{sec-1}
 Two stages
 \begin{itemize}
-\item Matlab integer linear programming to outright solve 85\% of the problems
+\item Matlab integer linear programming to outright solve \textasciitilde{}85\% of the problems
 \item Simulated annealing to approximate the ones that couldn't be solved
+\item Verify 6-7 inputs by hand. This is self-explanatory -- some inputs have very clear patterns. SA was run to validate them.
 \end{itemize}
 
 \section{Matlab integer linear programming}
@@ -73,7 +74,7 @@ So, generate a random valid partisan path, keep randomly modifying it, and take 
 solution sometimes to avoid local minima. Keep track of the best path so far, then at the
 end output it. So the process is as follows:\\
 \begin{enumerate}
-\item Generate random path
+\item Generate greedy path -- choose nearest neighbor with lowest cost. Do for all nodes
 \item Loop with temperature
 \item If temperature not the end temperature
 \begin{enumerate}
