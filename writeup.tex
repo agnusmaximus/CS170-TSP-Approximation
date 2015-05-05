@@ -1,0 +1,134 @@
+% Created 2015-05-04 Mon 22:59
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\tolerance=1000
+\usepackage[a4paper,margin=1cm,footskip=.5cm]{geometry}
+\usepackage{listings}
+\usepackage{amsmath}
+\author{Name: Max Lam | Section: 109 \\ Partners: Maya Reddy, Sneha Sankavaram, Natasha Sandy \\ Team Name:LMMNRSSS | Login-Submitted-With:abcd}
+\date{\today}
+\title{NPTSP Project}
+\hypersetup{
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs 24.3.1 (Org mode 8.2.10)}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\newpage
+
+
+\section{Main Idea}
+\label{sec-1}
+Two stages
+\begin{itemize}
+\item Matlab integer linear programming to outright solve 85\% of the problems
+\item Simulated annealing to approximate the ones that couldn't be solved
+\end{itemize}
+
+\section{Matlab integer linear programming}
+\label{sec-2}
+Matlab provides a function called 'intlinprog' which uses the branch\&cut algorithm.
+The branch\&cut algorithm works by using branch and bound, and linear programming
+to compute upper and lower bounds to the solution, which prunes nodes of the search tree.
+The Matlab guide for TSP was adopted for our project.
+The link is here: \url{http://www.mathworks.com/help/optim/ug/travelling-salesman-problem.html}
+The idea is that TSP can be formulated as a integer linear program such that every node
+has the constraint that it has exactly 2 edges coming out of it. Then we want binary integer
+indicators representing whether each edge should be included in the tour, for a minimum path.
+We modified the 'tour' by using a dummy node which has a distance of 0 to every other node.
+At the end, we remove the dummy node, thus creating a minimum path, instead of minimum tour.
+The way the tutorial handles subtours is it repeatedly adds constraints whenever it detects
+multiple subtours, then re-runs the integer linear program again and again. We adopt this method
+to detect invalid paths that traverse more than 3 cities with the same color consecutively.
+Thus, whenever we detect that the path violates the 'non-partisan' property, we re-run the integer
+linear program with the added constraints. So the overall process is as follows:\\
+\begin{enumerate}
+\item Formulate NPTSP as integer linear program
+\item Run linear integer program until only 1 subtour, adding constraints if not satisfied
+\item Check if satisfies 'non-partisan'. If so, exit with optimal path, else go to 2.
+\end{enumerate}
+
+\section{Simmulated Annealing}
+\label{sec-3}
+Very bare-bones approach. Uses the widely known simulated annealing approach. We
+have a temperature variable which indicates how likely we are to take a bad solution.
+So, generate a random valid partisan path, keep randomly modifying it, and take a bad
+solution sometimes to avoid local minima. Keep track of the best path so far, then at the
+end output it. So the process is as follows:\\
+\begin{enumerate}
+\item Generate random path
+\item Loop with temperature
+\item If temperature not the end temperature
+\begin{enumerate}
+\item Make random changes to the path
+\item If new path is better than the old, replace it
+\item If new path is worse than the old, replace with e$^{\text{-diffscore/temperature}}$ probability
+\item Decrease temperature by factor c
+\item Keep track of best path
+\item Goto 3
+\end{enumerate}
+\item Output best path
+\end{enumerate}
+
+\newpage
+
+\section{Input File Generation}
+\label{sec-4}
+We followed the 2-Opt algorithm and tried to generate cases
+that would be hard to approximate with it. This means clumping together
+nodes of the same color. Drew small cases by hand, then extended the cases
+to be 50x50 by adding random weights for the remaining edges
+
+\newpage
+
+\section{Running the Code}
+\label{sec-5}
+The code is separated into several files, some were experimental and don't quite
+fully work. The ones that don't quite work include the DP solution (which sometimes
+gives a partisan path) and the python approximation one. Therefore, we will mainly
+be focusing on the matlab code, and the C/C++ Simulated Annealing code, which was
+the only code we used to solve the inputs.
+
+\section{Matlab code}
+\label{sec-6}
+Run matlab, and within the matlab console cd into projbase/code/matlab.\\
+  Within the matlab console run TSP(inputfile,1,60).
+\begin{itemize}
+\item First argument is the input file
+\item Second argument is whether to debugoutput or not
+\item Third argument is time limit in seconds
+\end{itemize}
+
+\section{Simulated annealing code}
+\label{sec-7}
+cd into projbase/code/SA.\\
+  run make\\
+  run ./a.out < inputfile
+
+\newpage
+\section{Resources}
+\label{sec-8}
+\begin{itemize}
+\item Matlab \& libraries
+\item Matlab TSP tutorial: \url{http://www.mathworks.com/help/optim/ug/travelling-salesman-problem.html}
+\item C/C++ stdlibs
+\end{itemize}
+% Emacs 24.3.1 (Org mode 8.2.10)
+\end{document}
