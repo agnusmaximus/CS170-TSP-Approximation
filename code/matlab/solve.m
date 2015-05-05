@@ -1,4 +1,4 @@
-function [retvalue] = solve(input_directory,output_directory,tlimitsec)
+function [retvalue] = solve(input_directory,output_directory,done_directory,tlimitsec)
     % Get all files, process in sorted order
     all_files=dir(strcat(input_directory,'*.in'));
     files={};
@@ -42,7 +42,8 @@ function [retvalue] = solve(input_directory,output_directory,tlimitsec)
                 n_optimal=n_optimal+1;
             end
             
-            % Delete solved input
+            % Move solved input
+            copyfile(filepath,strcat(done_directory,char(files(i))));
             delete(filepath);
         else
             fprintf('Timeout %s\n', filepath);
