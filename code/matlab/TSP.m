@@ -65,20 +65,20 @@ function [path,costopt,isopt,exitval] = TSP(filename,is_debug,limitsec)
     % Add color constraints
     A=[];
     b=[];
-    if is_debug
-        disp('Color Constraints...')
-    end    
-    for i=1:n_cities
-       invalidpaths=getconstr(i,color,n_cities);
-       A=[A;invalidpaths];
-       b=[b;2*ones(size(invalidpaths,1),1)];
-       if is_debug
-           fprintf('Added constraints for node %d\n',i);
-       end
-    end
-    if is_debug
-        disp('Done With Color Constraints...')
-    end
+%     if is_debug
+%         disp('Color Constraints...')
+%     end    
+%     for i=1:n_cities
+%        invalidpaths=getconstr(i,color,n_cities);
+%        A=[A;invalidpaths];
+%        b=[b;2*ones(size(invalidpaths,1),1)];
+%        if is_debug
+%            fprintf('Added constraints for node %d\n',i);
+%        end
+%     end
+%     if is_debug
+%         disp('Done With Color Constraints...')
+%     end
     
     % Set options, and solve initial relaxed problem
     opts=optimoptions('intlinprog','Display','iter','MaxTime',limitsec,'CutGenMaxIter',5,'TolGapAbs',30)
@@ -130,31 +130,31 @@ function [path,costopt,isopt,exitval] = TSP(filename,is_debug,limitsec)
             numtours=length(tours);
         end
         
-%         % Get invalid paths
-%         invalidpaths=detectFourConsecutives(tours{1},color,n_cities);
-%         isinvalid=size(invalidpaths,1);
-%         
-%         % Get rid of invalid consecutive paths
-%         while isinvalid>0
-%             % Add constraints
-%             A=[A;invalidpaths];
-%             b=[b;2*ones(size(invalidpaths,1),1)];
-% 
-%             % Try to optimize again
-%             [x_tsp,costopt,exitflag,output] = intlinprog(dist,intcond,A,b,Aeq,beq,lb,ub,opts);
-%             
-%             % Count subtours -- if it breaks into multiple, fix subtours
-%             % again
-%             tours=detectSubtours(x_tsp,edges);
-%             numtours=length(tours);
-%             if numtours>1
-%                 break
-%             end
-%             
-%             % Update invalid paths
-%             invalidpaths = detectFourConsecutives(tours{1},color,n_cities);
-%             isinvalid = size(invalidpaths,1);            
-%         end
+        % Get invalid paths
+        invalidpaths=detectFourConsecutives(tours{1},color,n_cities);
+        isinvalid=size(invalidpaths,1);
+        
+        % Get rid of invalid consecutive paths
+        while isinvalid>0
+            % Add constraints
+            A=[A;invalidpaths];
+            b=[b;2*ones(size(invalidpaths,1),1)];
+
+            % Try to optimize again
+            [x_tsp,costopt,exitflag,output] = intlinprog(dist,intcond,A,b,Aeq,beq,lb,ub,opts);
+            
+            % Count subtours -- if it breaks into multiple, fix subtours
+            % again
+            tours=detectSubtours(x_tsp,edges);
+            numtours=length(tours);
+            if numtours>1
+                break
+            end
+            
+            % Update invalid paths
+            invalidpaths = detectFourConsecutives(tours{1},color,n_cities);
+            isinvalid = size(invalidpaths,1);            
+        end
     end    
     
     path=printpath(tours{1},n_cities);

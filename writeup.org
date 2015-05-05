@@ -10,6 +10,7 @@
   Two stages
   - Matlab integer linear programming to outright solve ~85% of the problems
   - Simulated annealing to approximate the ones that couldn't be solved
+  - Verify 6-7 inputs by hand. This is self-explanatory -- some inputs have very clear patterns. SA was run to validate them.
 
 * Matlab integer linear programming
   Matlab provides a function called 'intlinprog' which uses the branch&cut algorithm.
@@ -37,7 +38,7 @@
   So, generate a random valid partisan path, keep randomly modifying it, and take a bad
   solution sometimes to avoid local minima. Keep track of the best path so far, then at the
   end output it. So the process is as follows:\\
-  1. Generate random path
+  1. Generate greedy path -- choose nearest neighbor with lowest cost. Do for all nodes
   2. Loop with temperature
   3. If temperature not the end temperature
      1. Make random changes to the path
