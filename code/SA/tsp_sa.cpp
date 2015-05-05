@@ -75,7 +75,7 @@ void add_random_valid_city(Path &p, set<int> &candidates, int n_nodes_added) {
 void print_path(Path &p) {
     cout << "Cost: " << p.cost << endl;
     for (int i = 0; i < n_nodes; i++) {
-	cout << p.cities[i] << " ";
+	cout << p.cities[i]+1 << " ";
     }
     cout << endl;
 }
@@ -234,7 +234,7 @@ int main(void) {
 	for (int i = 0; i < N_ITER; i++) {
 	    long double temp = strt / (i+1);
 	    while (temp > T_END) {
-		if (iteration % GAP == 0 && DEBUG) print_path(cur_path);
+		if (iteration % GAP == 0 && DEBUG) print_path(best_path);
 		perturb_path(new_path);
 		if (new_path.cost < cur_path.cost ||
 		    pow(MATH_E, -(new_path.cost-cur_path.cost)/(double)temp) > rand01()) {

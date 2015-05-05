@@ -46,8 +46,8 @@ def processCase(s, t):
 
     cost += d[cur][next]
 
-  #return "You got " + `cost` + " points for this case."
-  return `cost`
+  return "You got " + `cost` + " points for this case."
+  #return `cost`
 
 if __name__ == '__main__':
     main(sys.argv[1:])

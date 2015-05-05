@@ -1,4 +1,4 @@
-function [path,costopt,isopt] = TSP(filename,is_debug)
+function [path,costopt,isopt,exitval] = TSP(filename,is_debug,limitsec)
     % Color definitions
     RED=0;
     BLUE=1;
@@ -24,12 +24,12 @@ function [path,costopt,isopt] = TSP(filename,is_debug)
         end
     end
     fclose(fileid);
-%     if is_debug
-%         disp('Adjacency Matrix:')
-%         disp(adj_matrix)
-%         disp('City Colors:')
-%         disp(color)
-%     end
+     if is_debug
+         disp('Adjacency Matrix:')
+         disp(adj_matrix)
+         disp('City Colors:')
+         disp(color)
+     end
     
     % Convert 2-D distances into 1-D values
     index=1;
@@ -62,9 +62,27 @@ function [path,costopt,isopt] = TSP(filename,is_debug)
     lb=zeros(n_edges_total,1);
     ub=ones(n_edges_total,1);
     
+    % Add color constraints
+    A=[];
+    b=[];
+%     if is_debug
+%         disp('Color Constraints...')
+%     end    
+%     for i=1:n_cities
+%        invalidpaths=getconstr(i,color,n_cities);
+%        A=[A;invalidpaths];
+%        b=[b;2*ones(size(invalidpaths,1),1)];
+%        if is_debug
+%            fprintf('Added constraints for node %d\n',i);
+%        end
+%     end
+%     if is_debug
+%         disp('Done With Color Constraints...')
+%     end
+    
     % Set options, and solve initial relaxed problem
-    opts=optimoptions('intlinprog','Display','off','CutGenMaxIter',5);
-    [x_tsp,costopt,exitflag,output]=intlinprog(dist,intcond,[],[],Aeq,beq,lb,ub,opts);
+    opts=optimoptions('intlinprog','Display','off','MaxTime',limitsec);
+    [x_tsp,costopt,exitflag,output]=intlinprog(dist,intcond,A,b,Aeq,beq,lb,ub,opts);
     
     % Get subtours and invalid paths
     tours=detectSubtours(x_tsp,edges);
@@ -75,11 +93,22 @@ function [path,costopt,isopt] = TSP(filename,is_debug)
         invalidpaths=detectFourConsecutives(tours{1},color,n_cities);
         isinvalid=size(invalidpaths,1);
     end
+        
+    c=clock;
     
     % Inequality Constraints: Remove subtours and invalid consecutive paths
-    A=spalloc(0,n_edges_total,0);
-    b=[];
     while numtours>1 || isinvalid>0
+        
+        % Break if time limit exceeded
+        cprime=clock;
+        if etime(cprime,c) > limitsec
+            exitval=0;
+            path=[];
+            costopt=-1;
+            isopt=0;
+            return
+        end
+
         % Get rid of subtours
         while numtours>1
             b=[b;zeros(numtours,1)]; 
@@ -130,6 +159,7 @@ function [path,costopt,isopt] = TSP(filename,is_debug)
     
     path=printpath(tours{1},n_cities);
     isopt=output.absolutegap==0;
+    exitval=1;
     if is_debug==1
         g=sprintf('%d ',path);
         disp(g);

@@ -1,49 +1,59 @@
-function [retvalue] = solve(input_directory,output_directory)
+function [retvalue] = solve(input_directory,output_directory,tlimitsec)
     % Get all files, process in sorted order
-    unsorted_files=dir(fullfile('', strcat(input_directory, '*.in')));
-    files={unsorted_files.name};
-    str=sprintf('%s#',files{:});
-    num=sscanf(str,'%d.in#');
-    [dummy,index]=sort(num);
-    files=files(index);
+    all_files=dir(strcat(input_directory,'*.in'));
+    files={};
+    for i=1:length(all_files)
+       files{i}=all_files(i).name;
+    end
+    
+    % Files that took too long
+    timeout_files={};
     
     % Process files
-    validationfilepath=strcat(output_directory,'validation_output');
-    totaloutputfilepath=strcat(output_directory,'all_output');
-    totaloutputfile=fopen(totaloutputfilepath,'w');
-    validationfile=fopen(validationfilepath,'w');
     n_optimal=0;
+    ntimedout=1;
     for i=1:length(files)
         % Debug print
         filepath=strcat(input_directory,char(files(i)));
-        fprintf('%s\n',strcat('Processing:',filepath));
-        
-        % Individual output file
-        [pathstr,name,ext]=fileparts(char(files(i)));
-        cur_out_file=fopen(strcat(output_directory,name,'.out'),'w');
-        fprintf('%s\n',strcat('Writing To:',strcat(output_directory,name,'.out')));
-
+        fprintf('%s\n',strcat('Processing:',filepath));       
         
         % Solve
-        [path,costopt,isopt]=TSP(filepath,0);
+        [path,costopt,isopt,exitval]=TSP(filepath,0,tlimitsec);
         
-        % Write to outputs
-        g=sprintf('%d ',path);
-        fprintf(totaloutputfile,'%s\n',g);
-        fprintf(cur_out_file,'%s\n',g);
-        fprintf(validationfile,'%g\n',costopt);        
+        if exitval==1
+            % Individual output file
+            [pathstr,name,ext]=fileparts(char(files(i)));
+            cur_out_file=fopen(strcat(output_directory,name,'.out'),'w');
+            fprintf('%s\n',strcat('Writing To:',strcat(output_directory,name,'.out')));
+            
+            % Validation file output
+            val_out_file=fopen(strcat(output_directory,name,'.out_validation'),'w');
+            fprintf(val_out_file,'%g\n',costopt);
+            
+            % Write to outputs
+            g=sprintf('%d ',path);
+            fprintf(cur_out_file,'%s\n',g);
         
-        % Close file
-        fclose(cur_out_file);
-        
-        % Count optimal answers
-        if isopt==true
-            n_optimal=n_optimal+1;
+            % Close file
+            fclose(cur_out_file);
+            
+            % Count optimal answers
+            if isopt==true
+                n_optimal=n_optimal+1;
+            end
+            
+            % Delete solved input
+            delete(filepath);
+        else
+            fprintf('Timeout %s\n', filepath);
+            timeoutfiles{ntimedout}=filepath;
+            ntimedout=ntimedout+1;
+            disp(timeoutfiles)
         end
     end
-    fclose(totaloutputfile);
-    fclose(validationfile);
     
     % Print statistics
     fprintf('%d optimal answers out of %d inputs\n',n_optimal,length(files));    
+    disp('Files that timed out');
+    disp(timeoutfiles);
 end
