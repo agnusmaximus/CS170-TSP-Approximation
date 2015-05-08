@@ -18,7 +18,7 @@ using namespace std;
 #define C .999
 
 #define GAP 100000
-#define DEBUG 0
+#define DEBUG 1
 #define N_ITER 5000
 #define NN_ITER 10
 
@@ -73,7 +73,7 @@ void add_random_valid_city(Path &p, set<int> &candidates, int n_nodes_added) {
 }
 
 void print_path(Path &p) {
-    //cout << "Cost: " << p.cost << endl;
+    cout << "Cost: " << p.cost << endl;
     for (int i = 0; i < n_nodes; i++) {
 	cout << p.cities[i]+1 << " ";
     }

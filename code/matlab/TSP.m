@@ -81,7 +81,7 @@ function [path,costopt,isopt,exitval] = TSP(filename,is_debug,limitsec)
 %     end
     
     % Set options, and solve initial relaxed problem
-    opts=optimoptions('intlinprog','Display','iter','MaxTime',limitsec,'CutGenMaxIter',5,'TolGapAbs',30)
+    opts=optimoptions('intlinprog','Display','off','MaxTime',60,'CutGenMaxIter',5,'TolGapAbs',20)
     [x_tsp,costopt,exitflag,output]=intlinprog(dist,intcond,A,b,Aeq,beq,lb,ub,opts);
     
     % Get subtours and invalid paths

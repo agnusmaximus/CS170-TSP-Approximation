@@ -2,7 +2,7 @@
 #+LATEX_HEADER: \usepackage{listings}
 #+LATEX_HEADER: \usepackage{amsmath}
 #+TITLE: NPTSP Project
-#+AUTHOR: Name: Max Lam | Section: 109 @@latex:\\@@ Partners: Maya Reddy, Sneha Sankavaram, Natasha Sandy @@latex:\\@@ Team Name:LMMNRSSS | Login-Submitted-With:cs170-qg
+#+AUTHOR:  Team Name:LMMNRSSS @@latex:\\@@ Names: Maya Reddy, Natasha Sandy, Sneha Sankavaram, Max Lam @@latex:\\@@ Login-Submitted-With:cs170-qg
 \newpage
 
 

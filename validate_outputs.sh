@@ -18,7 +18,7 @@ for ((i=0;i<${#inputfiles[@]};++i)); do
     validationfile="${validationfiles[$i]}"
     echo 'Validating' $inputfile 'with input file' $outputfile 'with validation file' $validationfile
     python ./code/python/scorer_single.py $inputfile $outputfile > $checkfile
-    #cat $outputfile >> $checkoutputfile
+    cat $outputfile >> $checkoutputfile
     diff -u --ignore-all-space $checkfile $validationfile
 done;
 #echo 'Diffing' $validationfile 'and' $checkfile
