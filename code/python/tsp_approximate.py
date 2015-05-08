@@ -80,6 +80,7 @@ def k_search(k, n, m, colors, path, num_times):
 						print "new path", new_p, cost, "iteration", total - num_times, " best ", best_path
 				best_cost = cost
 				best_path = new_p[:]
+
 		num_times -= 1
 	if check_cost(best_path, m, colors):
 		return best_path
@@ -140,4 +141,3 @@ def find_cost(p, d):
 	for i in range(len(p)-1):
 		total += d[i][i+1]
 	return total
-
